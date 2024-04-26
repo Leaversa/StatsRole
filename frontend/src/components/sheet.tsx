@@ -1,7 +1,19 @@
+interface IProps {
+  section: Record<string, unknown>;
+  header: string;
+}
+
 type CharacterType = {
   Name: string;
   Type: string;
-  Statistics: SectionType;
+  Alignment: string;
+  Description: string;
+  HP: number;
+  Defense: number;
+  Speed: number;
+  Statistics: Record<string, number>;
+  Abilities: Record<string, string>;
+  Actions: Record<string, string>;
   [key: string]: string | number | object;
 };
 
@@ -13,72 +25,77 @@ const Divider = () => {
   );
 };
 
-type SectionType = {
-  [key: string]: string | number;
-};
-
-const Section = ({
-  section,
-  header,
-}: {
-  section: SectionType;
-  header: string;
-}) => {
-  console.log(section);
+const Section: React.FC<IProps> = ({ section, header }) => {
   return (
-    <>
-      <h2 className="font-semibold">{header}</h2>
+    <section>
+      <h2 className="font-semibold text-xl">{header}</h2>
       <Divider />
-      {Object.entries(section).map(([key, value]) => {
-        return (
-          <div>
-            <p>
-              <strong>{key}</strong> {value}
-            </p>
-          </div>
-        );
-      })}
-    </>
+      <div className="flex flex-col gap-2">
+        {Object.entries(section).map(([key, value]) => {
+          return (
+            <div className="flex gap-2">
+              <p className="font-bold">{key}.</p>
+              <p>{value as string}</p>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+};
+const Statistics: React.FC<IProps> = ({ section, header }) => {
+  const modiferCalc = (value: number) => {
+    const mod = Math.floor((value - 10) / 2);
+    return mod > 0 ? `+${mod}` : mod;
+  };
+
+  return (
+    <section>
+      <h2 className="font-semibold text-xl">{header}</h2>
+      <Divider />
+      <div className="flex justify-around w-full flex-wrap">
+        {Object.entries(section).map(([key, value]) => {
+          return (
+            <div className="px-3">
+              <p className="font-bold">{key}</p>
+              <p className="text-center">
+                {value as string} ({modiferCalc(value as number)})
+              </p>
+            </div>
+          );
+        })}
+      </div>
+    </section>
   );
 };
 
+function filterNonObjects(obj: Record<string, unknown>) {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([, value]) => typeof value !== "object")
+  );
+}
+
+function filteroutObject(obj: Record<string, unknown>, filterList: string[]) {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([key]) => !filterList.includes(key))
+  );
+}
+
 const CharacterInfo = ({ character }: { character: CharacterType }) => {
+  // console.log("test", sortObject(character))
+  // character = sortObject(character);
   return (
-    <div className="bg-orange-100 p-5 text-primary shadow-xl shadow-yellow-950/50">
+    <article className="bg-orange-100 p-5 text-primary shadow-xl shadow-yellow-950/50 w-fit">
       <h2 className="text-3xl font-semibold font-serif">{character.Name}</h2>
-      <p>{character.Type}</p>
-      <p>
-        <Section section={character.Statistics} header={"Statistics"} />
-        {Object.entries(character).map(([key, value]) => {
-          if (key === "Name" || key === "Type" || key === "Statistics") {
-            return null;
-          }
-          if (typeof value === "string" || typeof value === "number") {
-            return (
-              <>
-                <strong>{key} </strong>
-                {value}
-                <br />
-              </>
-            );
-          }
-          if (typeof value === "object") {
-            return (
-              <>
-                <h2 className="font-bold text-xl">{key}</h2>
-                <Divider />
-                {Object.entries(value).map(([subKey, subValue]) => (
-                  <>
-                    <strong>{subKey}. </strong> {subValue}
-                    <br />
-                  </>
-                ))}
-              </>
-            );
-          }
-        })}
-      </p>
-    </div>
+      <p>{character.Type}, {character.Alignment}</p>
+      <Section
+        section={filteroutObject(filterNonObjects(character), ["Name", "Type","Alignment"])}
+        header={"General"}
+      />
+      <Statistics section={character.Statistics} header={"Statistics"} />
+      <Section section={character.Abilities} header={"Abilities"} />
+      <Section section={character.Actions} header={"Actions"} />
+    </article>
   );
 };
 

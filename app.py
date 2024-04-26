@@ -13,7 +13,6 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 client = OpenAI()
 
 
-
 @app.route("/")
 @cross_origin()
 def hello_world():
@@ -36,10 +35,9 @@ def prompt():
     
     completion = client.chat.completions.create(
         model="gpt-3.5-turbo",
-        temperature=0.2,
         max_tokens=500,
         messages=[
-            {"role": "system", "content": "Create a character sheet including in JSON: Name, Type, HP, Defense, Description, Statistics, Abilities (key-value), Actions (key-value) "},
+            {"role": "system", "content": "Create a character sheet including in JSON: Name, Type, Alignment, Description, HP, Defense, Speed (ft. suffix), Statistics (with Ability Score Modifiers), Abilities (key-value), Actions (key-value)"},
             {"role": "user", "content": data['prompt']}
         ]
         )

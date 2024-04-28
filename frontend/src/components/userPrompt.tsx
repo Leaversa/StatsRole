@@ -10,7 +10,6 @@ export const UserPrompt = ({
 }) => {
   const [prompt, setPrompt] = useState("");
   const [loading, setLoading] = useState(false);
-
   const { toast } = useToast();
 
   const showToast = (error: Error) => {
@@ -26,7 +25,7 @@ export const UserPrompt = ({
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await fetch("http://127.0.0.1:5000/prompt", {
+      const response = await fetch(`${import.meta.env.VITE_API_SERVER}/prompt`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

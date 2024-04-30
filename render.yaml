@@ -5,3 +5,8 @@ services:
   rootDir: ./
   buildCommand: pip install -r requirements.txt
   startCommand: gunicorn app:app
+- type: web
+  name: app-frontend
+  runtime: static
+  buildCommand: cd frontend; yarn; yarn build
+  staticPublishPath: ./frontend/dist/

@@ -82,19 +82,27 @@ function filteroutObject(obj: Record<string, unknown>, filterList: string[]) {
 }
 
 const CharacterInfo = ({ character }: { character: CharacterType }) => {
-  // console.log("test", sortObject(character))
-  // character = sortObject(character);
   return (
-    <article className="bg-orange-100 p-5 text-primary shadow-xl shadow-yellow-950/50 w-fit">
-      <h2 className="text-3xl font-semibold font-serif">{character.Name}</h2>
-      <p>{character.Type}, {character.Alignment}</p>
-      <Section
-        section={filteroutObject(filterNonObjects(character), ["Name", "Type","Alignment"])}
-        header={"General"}
-      />
-      <Statistics section={character.Statistics} header={"Statistics"} />
-      <Section section={character.Abilities} header={"Abilities"} />
-      <Section section={character.Actions} header={"Actions"} />
+    <article className="bg-orange-100 text-primary shadow-xl shadow-yellow-950/50 w-fit mx-auto">
+      <hr className="bg-yellow-500 h-1 border-none" />
+      <div className="p-5">
+        <h2 className="text-3xl font-semibold font-display">{character.Name}</h2>
+        <p>
+          {character.Type}, {character.Alignment}
+        </p>
+        <Section
+          section={filteroutObject(filterNonObjects(character), [
+            "Name",
+            "Type",
+            "Alignment",
+          ])}
+          header={"General"}
+        />
+        <Statistics section={character.Statistics} header={"Statistics"} />
+        <Section section={character.Abilities} header={"Abilities"} />
+        <Section section={character.Actions} header={"Actions"} />
+      </div>
+      <hr className="bg-yellow-500 h-1 border-none" />
     </article>
   );
 };

@@ -12,7 +12,7 @@ CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 client = OpenAI()
 
-prompt = "Create a character sheet including in JSON: Name, Type, Alignment, Description, HP, Defense, Speed (ft. suffix), Statistics (with Ability Score Modifiers for each statistic), Abilities (key-value), Actions (key-value)"
+
 
 @app.route("/")
 @cross_origin()
@@ -23,11 +23,12 @@ def hello_world():
 @cross_origin()
 def prompt():
     time.sleep(1)
+    # print(data)
     data = request.json
     if (data['prompt'] == None):
         return "Error: No prompt provided.", 400
     print(data['prompt'])
-    
+    prompt = "Create a character sheet including in JSON: Name, Type, Alignment, Description, HP, Defense, Speed (ft. suffix), Statistics (with Ability Score Modifiers for each statistic), Abilities (key-value), Actions (key-value)"
     
     completion = client.chat.completions.create(
         model="gpt-3.5-turbo",

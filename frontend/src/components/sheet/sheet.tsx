@@ -1,19 +1,14 @@
+import { blacklistObjectKeys, filterNonObjects } from "@/lib/utils.ts";
 import { CharacterProps } from "./sheet.type.ts";
 import { Section } from "./sheetSections.tsx";
 
-function filterNonObjects(obj: Record<string, unknown>) {
-  return Object.fromEntries(
-    Object.entries(obj).filter(([, value]) => typeof value !== "object")
-  );
-}
-
-function filteroutObject(obj: Record<string, unknown>, filterList: string[]) {
-  return Object.fromEntries(
-    Object.entries(obj).filter(([key]) => !filterList.includes(key))
-  );
-}
-
 const CharacterInfo = ({ character }: { character: CharacterProps }) => {
+  const blacklistedKeys = ["Name", "Type", "Alignment"];
+  const generalSection = blacklistObjectKeys(
+    filterNonObjects(character),
+    blacklistedKeys
+  );
+
   return (
     <div className="px-5 pb-16">
       <article className="bg-orange-100 text-primary shadow-xl shadow-yellow-950/50 w-fit mx-auto">
@@ -25,15 +20,12 @@ const CharacterInfo = ({ character }: { character: CharacterProps }) => {
           <p>
             {character.Type}, {character.Alignment}
           </p>
+          <Section section={generalSection} header={"General"} />
           <Section
-            section={filteroutObject(filterNonObjects(character), [
-              "Name",
-              "Type",
-              "Alignment",
-            ])}
-            header={"General"}
+            type="statistics"
+            section={character.Statistics}
+            header={"Statistics"}
           />
-          <Section type="statistics" section={character.Statistics} header={"Statistics"} />
           <Section section={character.Abilities} header={"Abilities"} />
           <Section section={character.Actions} header={"Actions"} />
         </div>

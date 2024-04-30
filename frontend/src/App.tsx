@@ -2,15 +2,15 @@ import { useEffect, useState } from "react";
 import UserPrompt from "@/components/userPrompt";
 import Sheet from "@/components/sheet/sheet";
 import { Toaster } from "@/components/ui/toaster";
-import useLocalStorage from "./hooks/useLocalStorage";
+import useLocalStorage from "@/hooks/useLocalStorage";
 
 function App() {
-  const [chars, setChars] = useLocalStorage("char");
-  const [char, setChar] = useState(chars ? chars : null);
+  const [pastChar, setPastChar] = useLocalStorage("char");
+  const [char, setChar] = useState(pastChar ? pastChar : null);
 
   useEffect(() => {
-    setChars(char);
-  }, [char, setChars, chars]);
+    setPastChar(char);
+  }, [char, pastChar, setPastChar]);
   return (
     <main>
       <section className="w-full px-6 md:py-12 lg:py-16">

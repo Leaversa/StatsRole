@@ -25,20 +25,23 @@ export const UserPrompt = ({
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_SERVER}/prompt`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          prompt,
-        }),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_SERVER}/prompt`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            prompt,
+          }),
+        }
+      );
       if (!response.ok) {
         throw new Error("Failed to fetch data");
       }
       const data = await response.json();
-      console.log(JSON.parse(data).name);
+      console.log(JSON.parse(data));
       setChar(JSON.parse(data));
     } catch (error) {
       if (error instanceof Error) {

@@ -35,9 +35,11 @@ def prompt():
     
     completion = client.chat.completions.create(
         model="gpt-3.5-turbo",
-        max_tokens=500,
+        response_format={ "type": "json_object" },
+        max_tokens=2500,
+        temperature=1,
         messages=[
-            {"role": "system", "content": "Create a character sheet including in JSON: Name, Type, Alignment, Description, HP, Defense, Speed (ft. suffix), Statistics (with Ability Score Modifiers), Abilities (key-value), Actions (key-value)"},
+            {"role": "system", "content": "Create a character sheet including in JSON: Name, Type, Alignment, Description, HP, Defense, Speed (ft. suffix), Statistics (with Ability Score Modifiers for each statistic), Abilities (key-value), Actions (key-value)"},
             {"role": "user", "content": data['prompt']}
         ]
         )

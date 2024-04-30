@@ -1,0 +1,7 @@
+services:
+- type: web
+  name: app-frontend
+  branch: main
+  runtime: static
+  buildCommand: cd frontend; yarn; yarn build
+  staticPublishPath: ./frontend/dist/

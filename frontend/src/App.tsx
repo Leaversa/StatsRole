@@ -1,16 +1,14 @@
 import { useEffect, useState } from "react";
 import UserPrompt from "@/components/userPrompt";
-import Sheet from "@/components/sheet";
+import Sheet from "@/components/sheet/sheet";
 import { Toaster } from "@/components/ui/toaster";
 import useLocalStorage from "./hooks/useLocalStorage";
 
 function App() {
-
   const [chars, setChars] = useLocalStorage("char");
   const [char, setChar] = useState(chars ? chars : null);
 
   useEffect(() => {
-    console.log(chars);
     setChars(char);
   }, [char, setChars, chars]);
   return (

@@ -1,7 +1,7 @@
 import json
 from openai import OpenAI
 from dotenv import load_dotenv
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
 import time
 
@@ -12,16 +12,12 @@ CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 client = OpenAI()
 
+prompt = "Create a character sheet including in JSON: Name, Type, Alignment, Description, HP, Defense, Speed (ft. suffix), Statistics (with Ability Score Modifiers for each statistic), Abilities (key-value), Actions (key-value)"
 
 @app.route("/")
 @cross_origin()
 def hello_world():
     return "ok"
-
-@app.route('/test')
-@cross_origin()
-def test():
-    return render_template('index.html')
 
 @app.route('/prompt', methods=['POST'])
 @cross_origin()
@@ -39,7 +35,7 @@ def prompt():
         max_tokens=2500,
         temperature=1,
         messages=[
-            {"role": "system", "content": "Create a character sheet including in JSON: Name, Type, Alignment, Description, HP, Defense, Speed (ft. suffix), Statistics (with Ability Score Modifiers for each statistic), Abilities (key-value), Actions (key-value)"},
+            {"role": "system", "content": prompt},
             {"role": "user", "content": data['prompt']}
         ]
         )
@@ -48,8 +44,4 @@ def prompt():
     print(completion.choices[0].message.content)
     response = jsonify(completion.choices[0].message.content)
     return response
-
-
-if __name__ == '__main__':
-    app.run(port=8000, debug=True)
     

@@ -21,34 +21,38 @@ export const UserPrompt = ({
     });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_SERVER}/prompt`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            prompt,
-          }),
+    fetch(`${import.meta.env.VITE_API_SERVER}/prompt`, {
+      method: "POST",
+      credentials: "omit",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        prompt,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
         }
-      );
-      if (!response.ok) {
-        throw new Error("Failed to fetch data");
-      }
-      const data = await response.json();
-      console.log(JSON.parse(data));
-      setChar(JSON.parse(data));
-    } catch (error) {
-      if (error instanceof Error) {
-        showToast(error);
-      }
-    }
-    setLoading(false);
+        console.log(response);
+        return response.json();
+      })
+      .then((data) => {
+        console.log(JSON.parse(data));
+        setChar(JSON.parse(data));
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error(error);
+        if (error instanceof Error) {
+          showToast(error);
+        }
+        setLoading(false);
+      });
   };
 
   return (

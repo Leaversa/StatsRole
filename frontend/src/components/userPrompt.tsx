@@ -5,11 +5,14 @@ import { useToast } from "@/components/ui/use-toast";
 
 export const UserPrompt = ({
   setChar,
+  isLoading,
+  setIsLoading,
 }: {
   setChar: React.Dispatch<React.SetStateAction<null>>;
+  isLoading: boolean;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const [prompt, setPrompt] = useState("");
-  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
   const showToast = (error: Error) => {
@@ -23,7 +26,8 @@ export const UserPrompt = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+
+    setIsLoading(true);
     fetch(`${import.meta.env.VITE_API_SERVER}/prompt`, {
       method: "POST",
       credentials: "omit",
@@ -44,14 +48,14 @@ export const UserPrompt = ({
       .then((data) => {
         console.log(JSON.parse(data));
         setChar(JSON.parse(data));
-        setLoading(false);
+        setIsLoading(false)
       })
       .catch((error) => {
         console.error(error);
         if (error instanceof Error) {
           showToast(error);
         }
-        setLoading(false);
+        setIsLoading(false);
       });
   };
 
@@ -63,8 +67,8 @@ export const UserPrompt = ({
         value={prompt}
         onChange={(e) => setPrompt(e.target.value)}
       />
-      <Button type="submit" disabled={loading}>
-        {loading ? "Loading..." : "Send"}
+      <Button type="submit" disabled={isLoading}>
+        {isLoading ? "Loading..." : "Send"}
       </Button>
     </form>
   );

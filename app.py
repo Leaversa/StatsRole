@@ -23,18 +23,16 @@ def hello_world():
 @cross_origin()
 def prompt():
     time.sleep(1)
-    # print(data)
+    prompt = "Create a character sheet including in JSON: Name, Type, Alignment, Description, HP, Defense, Speed (ft. suffix), Statistics (no Ability Score Modifiers), Abilities (key-value, 1 value per key), Actions (key-value, 1 value per key)"
     data = request.json
     if (data['prompt'] == None):
         return "Error: No prompt provided.", 400
     print(data['prompt'])
-    prompt = "Create a character sheet including in JSON: Name, Type, Alignment, Description, HP, Defense, Speed (ft. suffix), Statistics (with Ability Score Modifiers for each statistic), Abilities (key-value), Actions (key-value)"
-    
+        
     completion = client.chat.completions.create(
         model="gpt-3.5-turbo",
         response_format={ "type": "json_object" },
         max_tokens=2500,
-        temperature=1,
         messages=[
             {"role": "system", "content": prompt},
             {"role": "user", "content": data['prompt']}

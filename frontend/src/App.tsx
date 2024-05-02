@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import UserPrompt from "@/components/userPrompt";
 import Sheet from "@/components/sheet/sheet";
 import { Toaster } from "@/components/ui/toaster";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import Loader from "@/components/ui/loader";
+import { toast } from "./components/ui/use-toast";
 
 function App() {
   const [pastChar, setPastChar] = useLocalStorage("char");
@@ -13,6 +15,17 @@ function App() {
   useEffect(() => {
     setPastChar(char);
   }, [char, pastChar, setPastChar]);
+
+  const handleError = (Error: Error) => {
+    console.error(Error);
+    setChar(null);
+    toast({
+      variant: "destructive",
+      duration: 5000,
+      title: "Uh oh! Something went wrong.",
+      description: "Please try again.",
+    });
+  };
   return (
     <main>
       <section className="w-full px-6 md:py-12 lg:py-16">
@@ -28,9 +41,15 @@ function App() {
               character sheet.
             </p>
           </div>
-          {(char && !isLoading) && <Sheet character={char} />}
+          <ErrorBoundary fallback={null} onError={handleError}>
+            {char && !isLoading && <Sheet character={char} />}
+          </ErrorBoundary>
           {isLoading && <Loader className="mx-auto" />}
-          <UserPrompt setChar={setChar} isLoading={isLoading} setIsLoading={setIsLoading} />
+          <UserPrompt
+            setChar={setChar}
+            isLoading={isLoading}
+            setIsLoading={setIsLoading}
+          />
         </div>
       </section>
       <Toaster />

@@ -41,15 +41,15 @@ function App() {
               character sheet.
             </p>
           </div>
-          <ErrorBoundary fallback={null} onError={handleError}>
-            {char && !isLoading && <Sheet character={char} />}
-          </ErrorBoundary>
-          {isLoading && <Loader className="mx-auto" />}
           <UserPrompt
             setChar={setChar}
             isLoading={isLoading}
             setIsLoading={setIsLoading}
           />
+          <ErrorBoundary fallback={null} onError={handleError}>
+            {char && !isLoading && <Sheet character={char} />}
+          </ErrorBoundary>
+          {isLoading && <Loader className="mx-auto" />}
         </div>
       </section>
       <Toaster />
